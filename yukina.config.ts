@@ -9,7 +9,7 @@ const YukinaConfig: Configuration = {
   description: "Custom Minecraft Survival and Creative Worlds",
 
   site: "https://mcmeddon.github.io/",
-  base: "/xcvtest2/",
+  base: "https://mcmeddon.github.io/",
 
   locale: "en", // set for website language and date format
 
@@ -40,7 +40,7 @@ const YukinaConfig: Configuration = {
 
   username: "McMeddon",
   sign: "Digital Enviroment Designer",
-  avatarUrl: "/mcmeddonprofilepicture.gif",
+  avatarUrl: "./mcmeddonprofilepicture.gif",
   /* avatarUrl: "https://static.planetminecraft.com/files/avatar/1592432_7.jpg", */
   socialLinks: [
     {
