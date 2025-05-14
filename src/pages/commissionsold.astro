@@ -1,0 +1,586 @@
+---
+import { getEntry, render } from "astro:content";
+import Main from "../layouts/MainLayout.astro";
+import Markdown from "../components/Markdown.astro";
+import CopyRight from "../components/misc/CopyRight.astro";
+import SocialIcon from "../components/widgets/SocialIcon.astro";
+import { Icon } from "astro-icon/components";
+
+const aboutPost = await getEntry("specs", "about");
+const { Content } = await render(aboutPost!);
+interface Props {
+  title?: string;
+  subTitle?: string;
+  bannerImage?: string;
+  published?: Date;
+}
+const {  bannerImage, published } = Astro.props;
+
+const prices = {
+  patreonSurvivalSmall: "$5",
+  patreonSurvivalLarge: "$9",
+  reworkTier1a: "$25+",
+  reworkTier1b: "$50+",
+  reworkTier1c: "$150+",
+  creativeTier2a: "$50+",
+  creativeTier2b: "$100+",
+  creativeTier2c: "$200+",
+  survivalCommissionsTier3a: "$350+",
+  survivalCommissionsTier3b: "$450+",
+  survivalCommissionsTier3c: "$1500+",
+};
+
+const discordlink = "https://discord.gg/RRpPB3Apt5";
+
+const title="Commissions and Pricing";
+const subTitle="";
+
+
+---
+
+<Main title={title} subTitle={subTitle} bannerImage={bannerImage}>
+  <div class="article-wrapper">
+    
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<br>
+<br>
+    <div class="text-center mb-10 md:mb-16 max-w-3xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4 text-[var(--text-color)]">
+            Lets create the <br>
+            perfect world for you!
+        </h1>
+        <div class="mt-6 md:mt-8">
+          <a href={discordlink} class="btn btn-pricing-secondary  mt-auto text-[var(--text-color)] flex align-middle">
+                <Icon name="line-md:discord" size={24} class="float-start text-[var(--primary-color)] mr-4" />
+                Enter the Queue
+            </a>
+        </div>
+    </div>
+
+<commissionsection id="commission-info">
+  <div class="max-w w-full bg shadow-md rounded-lg border border-gray-200 overflow-hidden">
+    <div id="commission-header" class="p-4 border-b border-gray-200 backdrop-brightness-95"> 
+      <div class="flex justify-between items-center ">
+        <div class="flex items-center">
+          <svg id="commission-icon" class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h2 class="text-lg font-semibold" id="commission-status">Loading: Refresh page for details... </h2> </div>
+        <p class="align-middle float-end text-[var(--text-color)] text-sm">
+        </p>
+      </div>
+    </div>
+    <div class="p-4 " >
+      <p class="text-[var(--text-color)] text-sm mb-2" id="commission-message"> </p>
+    </div>
+  </div>
+</commissionsection>
+
+<script>
+
+  
+  //TAB FUNCTION ---------------------------------------
+
+  function openTab(event, tabName) {
+    // If called directly from an event listener without tabName explicitly passed
+    if (!tabName && event && event.currentTarget) {
+      tabName = event.currentTarget.getAttribute('data-tab');
+    }
+    if (!tabName) {
+        console.error("Tab name is missing.");
+        return;
+    }
+
+    console.log("--- openTab triggered ---");
+    console.log("Attempting to open tab:", tabName);
+    // ... (rest of your existing openTab function logic) ...
+    // Make sure your console logs inside openTab work as expected.
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("--- DOMContentLoaded event ---");
+
+    const tabButtons = document.querySelectorAll('#tab-buttons .tab-link');
+    if (tabButtons.length > 0) {
+      tabButtons.forEach(button => {
+        // const tabName = button.getAttribute('data-tab'); // We'll get this in openTab
+        // if (tabName) { // No, we want to add listener anyway, openTab will figure out the name or get it passed
+          button.addEventListener('click', function(event) {
+            // Pass the tabName directly if you prefer, or let openTab derive it
+            openTab(event, button.getAttribute('data-tab'));
+          });
+          console.log("Added click listener for button:", button);
+        // } else {
+        //   console.warn("Button found without a 'data-tab' attribute to determine tabName:", button);
+        // }
+      });
+    } else {
+      console.error("CRITICAL: No elements found with class '.tab-link' under '#tab-buttons' to attach event listeners.");
+    }
+
+    const firstTabButton = document.querySelector('#tab-buttons .tab-link');
+    if (firstTabButton) {
+      console.log("Default tab button found:", firstTabButton, "Clicking it to open default tab...");
+      firstTabButton.click(); // This will now trigger the event listener you just added
+    } else {
+      console.error("CRITICAL: Default tab button ('#tab-buttons .tab-link') not found. Tabs might not initialize correctly.");
+    }
+    console.log("--- DOMContentLoaded finished ---");
+  });
+
+  //TAP FUNCTION END ---------------------------------------
+  // JavaScript to fetch and display commission data
+  // This script is for the commission status and is separate from the tab functionality.
+  // It should remain as is.
+  document.addEventListener('DOMContentLoaded', function() {
+  const commissionStatusElement = document.getElementById('commission-status');
+  const commissionMessageElement = document.getElementById('commission-message');
+  const commissionHeaderElement = document.getElementById('commission-header');
+  const commissionIconElement = document.getElementById('commission-icon');
+  const jsonUrl = 'https://raw.githubusercontent.com/McMeddon/csd/main/commissions.json';
+
+  const statusStyles = {
+    open: {
+      headerBg: 'bg-green-50', iconText: 'text-green-600', statusText: 'text-green-700',
+      iconPath: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
+    },
+    closed: {
+      headerBg: 'bg-red-50', iconText: 'text-red-600', statusText: 'text-red-700',
+      iconPath: 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636'
+    },
+    delay: {
+      headerBg: 'bg-yellow-50', iconText: 'text-yellow-600', statusText: 'text-yellow-700',
+      iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+    },
+    default: {
+      headerBg: 'bg-gray-100', iconText: 'text-gray-500', statusText: 'text-gray-700',
+      iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+    }
+  };
+
+  function applyStyles(statusKey) {
+    const styles = statusStyles[statusKey] || statusStyles.default;
+    Object.values(statusStyles).forEach(s => {
+      commissionHeaderElement.classList.remove(s.headerBg);
+      commissionIconElement.classList.remove(s.iconText);
+      commissionStatusElement.classList.remove(s.statusText);
+    });
+    commissionHeaderElement.classList.add(styles.headerBg);
+    commissionIconElement.classList.add(styles.iconText);
+    commissionStatusElement.classList.add(styles.statusText);
+    const iconPathElement = commissionIconElement.querySelector('path');
+    if (iconPathElement) iconPathElement.setAttribute('d', styles.iconPath);
+  }
+
+  fetch(jsonUrl)
+    .then(response => {
+      if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
+      return response.json();
+    })
+    .then(data => {
+      let currentStatusKey = 'default';
+      if (data.status) {
+        let statusText = ''; currentStatusKey = data.status;
+        if (data.status === 'open') statusText = "Open for Commissions";
+        else if (data.status === 'closed') statusText = "Commissions Closed";
+        else if (data.status === 'delay') statusText = "Commissions Delayed";
+        else { statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1); currentStatusKey = 'default'; }
+        commissionStatusElement.textContent = statusText;
+      } else commissionStatusElement.textContent = 'Status Unavailable';
+      applyStyles(currentStatusKey);
+      commissionMessageElement.textContent = data.statusMessage ? data.statusMessage : '';
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+      applyStyles('default');
+      commissionStatusElement.textContent = 'Error loading data';
+      commissionMessageElement.textContent = 'Could not fetch commission details.';
+    });
+  });
+</script>
+    
+<section class="bg-[var(--card-color)] py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-center mb-8 text-[var(--text-color)]">Commission Timeline</h2>
+    <div class="relative">
+      <div class="absolute left-1/2 rounded-2xl transform -translate-x-1/2 h-full w-1 bg-[var(--primary-color-lighten)]"></div>
+      <div class="space-y-12">
+        {/* Timeline items remain the same */}
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 md:pr-8 text-right">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 1: Initial Inquiry</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Reach out to discuss your ideas and requirements for the commission.
+            </p>
+          </div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">1</span>
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="hidden md:block md:w-1/2"></div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">2</span>
+          </div>
+          <div class="md:w-1/2 md:pl-8 text-left">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 2: Proposal & Quote</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Receive a proposal with pricing and timelines based on your requirements.
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 md:pr-8 text-right">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 3: Approval & Payment</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Approve the proposal and make the initial payment to secure your spot in the queue.
+            </p>
+          </div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">3</span>
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="hidden md:block md:w-1/2"></div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">4</span>
+          </div>
+          <div class="md:w-1/2 md:pl-8 text-left">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 4: Design & Development</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Work begins on your project, with regular updates and opportunities for feedback.
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 md:pr-8 text-right">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 5: Final Review</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Review the completed project and request any final adjustments before delivery.
+            </p>
+          </div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">5</span>
+          </div>
+          <div class="hidden md:block md:w-1/2"></div>
+        </div>
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="hidden md:block md:w-1/2"></div>
+          <div class="z-10 w-12 h-10 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center md:mx-8">
+            <span class="font-bold">6</span>
+          </div>
+          <div class="md:w-1/2 md:pl-8 text-left">
+            <h3 class="text-xl font-semibold text-[var(--primary-color)]">Step 6: Delivery</h3>
+            <p class="text-[var(--text-color)] mt-2">
+              Receive the final files and enjoy your custom world! Support is available for any questions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="mb-8 flex justify-center">
+  <div id="tab-buttons" class="inline-flex rounded-md shadow-sm bg-[var(--card-color)] p-1" role="group">
+    <button type="button" class="tab-link px-4 py-2 text-sm font-medium text-[var(--text-color)] border border-[var(--primary-color-lighten)] rounded-l-lg hover:bg-[var(--primary-color-lighten)] hover:text-white focus:z-10 focus:ring-2 focus:ring-[var(--primary-color)] focus:bg-[var(--primary-color)] focus:text-white" onclick="openTab(event, 'patreon')">
+      Patreon
+    </button>
+    <button type="button" class="tab-link px-4 py-2 text-sm font-medium text-[var(--text-color)] border-t border-b border-[var(--primary-color-lighten)] hover:bg-[var(--primary-color-lighten)] hover:text-white focus:z-10 focus:ring-2 focus:ring-[var(--primary-color)] focus:bg-[var(--primary-color)] focus:text-white" onclick="openTab(event, 'reworks')">
+      Reworks
+    </button>
+    <button type="button" class="tab-link px-4 py-2 text-sm font-medium text-[var(--text-color)] border-t border-b border-r border-[var(--primary-color-lighten)] hover:bg-[var(--primary-color-lighten)] hover:text-white focus:z-10 focus:ring-2 focus:ring-[var(--primary-color)] focus:bg-[var(--primary-color)] focus:text-white" onclick="openTab(event, 'creative')">
+      Creative Worlds
+    </button>
+    <button type="button" class="tab-link px-4 py-2 text-sm font-medium text-[var(--text-color)] border border-[var(--primary-color-lighten)] rounded-r-md hover:bg-[var(--primary-color-lighten)] hover:text-white focus:z-10 focus:ring-2 focus:ring-[var(--primary-color)] focus:bg-[var(--primary-color)] focus:text-white" onclick="openTab(event, 'survival')">
+      Survival Worlds
+    </button>
+  </div>
+</div>
+
+<div id="tab-content-wrapper">
+
+  <div id="patreon" class="tab-content">
+    <commissionwrapper>
+      <br>
+      <h2 class="text-3xl font-bold text-center mb-1 text-[var(--text-color)]"> Public Patreon Worlds - Non-Commission Tiers</h2>
+      <hr>
+      <br>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 transition-all">
+          <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+                  <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Survival Worlds Small</h2>
+                  <p class="text-muted mb-6 text-sm text-[var(--text-color)]"> Packed to with every feature possible, made with survival in mind, from the resource accessability all the way to the every structure
+                  </p>
+                  <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+                    <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Vanilla compatible - no mods needed</li>
+                    <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>150+ Worlds</li>
+                    <hr>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Ores</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Animals</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Vanilla Loot</li>
+                    <hr>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Caves (customized)</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Biomes (customized)</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Structures (customized)</li>                    
+                  </ul>
+              </div>
+              <hr><br>
+              <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+              <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.patreonSurvivalSmall}</p>
+              <br>
+              <a href="https://www.patreon.com/mcmeddon/membership" target="_blank" class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Become a Member</a>
+          </div>
+          <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg highlighted-card relative text-[var(--text-color)]"> <div class="flex-grow">
+                  <h2 class="text-2xl font-semibold mb-1">Survival Worlds Large</h2>
+                  <p class="text-muted mb-6 text-sm"> Packed to with every feature possible, made with survival in mind, from the resource accessability all the way to the every structure
+                  </p>
+                  <ul class="space-y-3 text-[var(--text-color)] mb-8">
+                    <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Vanilla compatible - no mods needed</li>
+                    <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>100+ Worlds</li>
+                    <hr>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Ores</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Animals</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Vanilla Loot</li>
+                    <hr>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Caves (customized)</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Biomes (customized)</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle mr-3"></i>Structures (customized)</li>
+                  </ul>
+              </div>
+              <hr><br>
+              <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+              <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.patreonSurvivalLarge}</p>
+              <br>
+              <a href="https://www.patreon.com/mcmeddon/membership" target="_blank" class="btn btn-pricing-primary w-full mt-auto"> Become a Member</a>
+          </div>     
+      </div>
+    </commissionwrapper>
+    <br><br>
+  </div>
+
+  <div id="reworks" class="tab-content" style="display:none;">
+    <commissionwrapper>
+      <br>
+      <h2 class="text-3xl font-bold text-center mb-1 text-[var(--text-color)]">Patreon World Re-Worked & Re-Exported</h2>
+      <hr>
+      <br>
+      <commissiongroup class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all">
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+                <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 1a: Basic</h2>
+                <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Simple World Adjuments</p><br>
+                <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+                <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>World re-export</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves dont break the surface</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Cave removal</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ore removal</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Structure removal</li>
+            </div>
+            <hr><br>
+            <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+            <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.reworkTier1a}</p>
+            <br>
+            <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+        </div>
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg relative text-[var(--text-color)]"> <div class="flex-grow">
+                <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 1b: Extented</h2>
+                <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Medium World Adjuments</p><br>
+                <p class="text-muted mb-6 text-sm"></p>
+                <ul class="space-y-3 text-[var(--text-color)] mb-8">
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>World re-export</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves dont break the surface</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Cave removal</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ore removal</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Structure removal</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Bedrock conversion</li>
+                </ul>
+              </div>
+              <hr><br>
+              <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+              <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.reworkTier1b}</p>
+              <br>
+              <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+        </div>     
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+          <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 1c: Intensive</h2>
+          <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Fully updated or reworked</p><br>
+          <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+          <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>World re-export</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves dont break the surface</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Cave removal</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ore removal</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Structure removal</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Bedrock conversion</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biome Customization</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Extra structure placements</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Specific Integration Requests</li>
+          </ul>
+      </div>
+      <hr><br>
+      <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+      <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.reworkTier1c}</p>
+      <br>
+      <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+    </div>
+      </commissiongroup>
+    </commissionwrapper>
+    <br><br>
+  </div>
+
+  <div id="creative" class="tab-content" style="display:none;">
+    <commissionwrapper>
+      <br>
+      <h2 class="text-3xl font-bold text-center mb-1 text-[var(--text-color)]">Commissions for Creative Worlds</h2>
+      <p class="text-center mb-1 text-[var(--text-color)]">Perfectly fitting, if you are Worldpainter, WorldEdit or Axiom experienced, <br>and need a top tier base landscape to start off!</p>
+      <hr><br>
+      <commissiongroup class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all">
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+                <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 2a: Creative </h2>
+                <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Simple Terrain Worlds</p><br>
+                <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+                <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>1-4k</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: River, Mountain, Beach, Ocean</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves  w/wo</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+                </ul>
+            </div>
+            <hr><br>
+            <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+            <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.creativeTier2a}</p>
+            <br>
+            <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+        </div>
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg highlighted-card relative text-[var(--text-color)]"> <div class="flex-grow">
+                <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 2b: Creative</h2>
+                <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Expanded Terrain Worlds</p><br>
+                <p class="text-muted mb-6 text-sm"></p>
+                <ul class="space-y-3 text-[var(--text-color)] mb-8">
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>5-8k</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: River, Mountain, Beach, Ocean</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves  w/wo</li>
+                  <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+                </ul>
+              </div>
+              <hr><br>
+              <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+              <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.creativeTier2b}</p>
+              <br>
+              <a href={discordlink} class="btn btn-pricing-primary w-full mt-auto"> Get started</a>
+        </div>     
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+          <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 2c: Creative</h2>
+          <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Extreme Terrain Worlds</p><br>
+          <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+          <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>8-16k</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: River, Mountain, Beach, Ocean</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves w/wo</li>
+            <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+          </ul>
+      </div>
+      <hr><br>
+      <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+      <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.creativeTier2c}</p>
+      <br>
+      <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+    </div>
+      </commissiongroup>
+    </commissionwrapper>
+    <br><br>
+  </div>
+
+  <div id="survival" class="tab-content" style="display:none;">
+    <commissionwrapper>
+      <br>
+      <h2 class="text-3xl font-bold text-center mb-1 text-[var(--text-color)]">Commissions for Survival Worlds</h2>
+      <p class="text-center mb-1 text-[var(--text-color)]">Perfectly fitting, if you are not Worldpainter, WorldEdit or Axiom experienced, <br>and need a top tier fully featured landscape to start off!</p>
+      <hr><br>
+      <commissiongroup class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-all">
+        <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+            <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 3a: Survival </h2> <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Simple Terrain Worlds</p><br>
+            <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+            <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>1-4k</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: All or as wished</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves  w/wo</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+            </ul>
+        </div>
+        <hr><br>
+        <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]  ">Starting at</p> 
+        <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.survivalCommissionsTier3a}</p>
+        <br>
+        <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+    </div>
+    <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg highlighted-card relative text-[var(--text-color)]"> <div class="flex-grow">
+            <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 3b: Survival</h2> <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Expanded Terrain Worlds</p><br>
+            <p class="text-muted mb-6 text-sm"></p>
+            <ul class="space-y-3 text-[var(--text-color)] mb-8">
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>5-8k</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: All or as wished</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves  w/wo</li>
+              <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+            </ul>
+          </div>
+          <hr><br>
+          <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+          <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.survivalCommissionsTier3b}</p>
+          <br>
+          <a href={discordlink} class="btn btn-pricing-primary w-full mt-auto text-[var(--text-color)] "> Get started</a>
+    </div>     
+    <div class="bg-card price-card rounded-xl p-6 md:p-8 flex flex-col shadow-lg"> <div class="flex-grow">
+      <h2 class="text-2xl font-semibold mb-1 text-[var(--text-color)]">Tier 3c: Survival</h2> <p class="text-l font-semibold mb-1 text-[var(--text-color)]">Extreme Terrain Worlds</p><br>
+      <p class="text-muted mb-6 text-sm text-[var(--text-color)]"></p>
+      <ul class="space-y-3 text-[var(--text-color-lighten)] mb-8">
+        <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>8-16k</li>
+        <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Biomes: All or as wished</li>
+        <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Ores  w/wo</li>
+        <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Caves w/wo</li>
+        <li class="flex items-center"><i class="fas line-md:github-loop mr-3"></i>Java World</li>
+      </ul>
+    </div>
+    <hr><br>
+    <p class=" text-center text-lg text-primary font-medium mb-2 text-[var(--text-color)]">Starting at</p> 
+    <p class=" text-center align-baseline float-center text-3xl font-bold mb-1 text-[var(--primary-color)]">{prices.survivalCommissionsTier3c}</p>
+    <br>
+    <a href={discordlink} class="btn btn-pricing-secondary w-full mt-auto text-[var(--text-color)]"> Get started</a>
+    </div>
+  </commissiongroup>
+</commissionwrapper>
+<br><br>
+</div> </div> {/* End of .container mx-auto ... */}
+</div> {/* End of .article-wrapper (this was section in your html, changed to div) */}
+
+<section><br></section> {/* This section seems empty, you might want to review its purpose */}
+    <div class="article">
+      <Markdown>
+        <Content />
+      </Markdown>
+    </div>
+  </div> {/* End of .article-wrapper from MainLayout presumably */}
+</Main>
+
+<style>
+  .article-wrapper { /* This is defined twice, once in MainLayout and once here. Consolidate if possible. */
+    @apply w-full rounded-2xl bg-[var(--card-color)] p-10;
+  }
+  .article {
+    @apply flex flex-col;
+  }
+
+.active-tab {
+  background-color: var(--primary-color) !important; /* Ensure override with important if needed */
+  color: white !important; /* Ensure override with important if needed */
+}
+</style>
+<script>
+
+</script>

@@ -1,0 +1,568 @@
+---
+import { getEntry, render } from "astro:content";
+import Main from "../../layouts/MainLayout.astro";
+import Markdown from "../components/Markdown.astro";
+import CopyRight from "../components/misc/CopyRight.astro";
+import css from ""; // This seems unused, you can likely remove it
+import { Icon } from "astro-icon/components";
+
+const aboutPost = await getEntry("specs", "about");
+const { Content } = await render(aboutPost!);
+
+interface Feature {
+  name: string;
+  description: string;
+  image: string | null;
+}
+
+interface Props {
+  title?: string;
+  subTitle?: string;
+  bannerImage?: string;
+  published?: Date;
+}
+
+const { title, subTitle, bannerImage, published } = Astro.props;
+
+// OLD Example data – replace with actual feature content
+const featuresOld: Feature[] = [
+  {
+    name: "Ancient Temple",
+    description: "An overgrown temple hidden deep in the jungle.",
+    image: "https://static.planetminecraft.com/files/image/minecraft/project/2025/878/18771878-x_l.webp",
+  },
+  {
+    name: "Frostkeep",
+    description: "A fortress nestled in the frozen peaks.",
+    image: "https://static.planetminecraft.com/files/image/minecraft/project/2025/878/18771881_l.webp",
+  },
+  {
+    name: "Frostkeep",
+    description: "A fortress nestled in the frozen peaks.",
+    image: "https://static.planetminecraft.com/files/image/minecraft/project/2025/878/18771880_l.webp",
+  },
+  {
+    name: "Frostkeep",
+    description: "A fortress nestled in the frozen peaks.",
+    image: "https://static.planetminecraft.com/files/image/minecraft/project/2025/878/18771882_l.webp",
+  },
+];
+
+// Corrected structure for the 'features' array
+const features: Feature[] = [
+  
+{
+    name: "Ores",
+    description: "Standard Minecraft ores are present for resource gathering.",
+    image: "./src/pages/features/images/ores.png ",
+  },
+  {
+    name: "Vanilla Loot",
+    description: "Standard Minecraft items and resources can be found as loot.",
+    image: "./src/pages/features/images/chest.gif",
+  },
+  {
+    name: "Custom Structures",
+    description: "Unique structures are scattered throughout the world.",
+    image: "./src/pages/features/images/structure.png",
+  },
+  
+  {
+    name: "Vanilla chunks outside of the core world",
+    description: "Both Java and Bedrock editions offer an infinite world experience with a seamless transition at the borders.",
+    image: "/src/pages/features/images/chunk.png",
+  },
+  {
+    name: "(Passive-) Animals Spawn",
+    description: "The world has been populated with all spawnable animals.",
+    image: "./src/pages/features/images/sheep.png",
+  },
+  {
+    name: "Custom Caves",
+    description: "The map features custom cave systems for exploration.",
+    image: "./src/pages/features/images/caves.jpg",
+  },
+ 
+  
+  {
+    name: "World height: -64 to 320",
+    description: "The world spans a vertical range from -64 to 320 blocks.",
+    image: "./src/pages/features/images/high.png",
+  },
+  {
+    name: "Water Level 62",
+    description: "The default water level in the world is set at coordinate 62.",
+    image: "./src/pages/features/images/waterlevel.jpg",
+  }, 
+  {
+    name: "Custom Biomes",
+    description: "The world includes unique biomes with distinct features.",
+    image: "./src/pages/features/images/forest.jpg",
+  },
+  {
+    name: "Survival-Oriented plants",
+    description: "Vegitation does NOT include any non-natural blocks",
+    image: "./src/pages/features/images/307px-Mangrove_Tree.png",
+  },
+  
+  {
+    name: "Small trees (max 6-7 block reach)",
+    description: "Trees are intentionally kept small, with a maximum reach of 6-7 blocks, for easier resource gathering.",
+    image: "./src/pages/features/images/oak.png",
+  },
+  {
+    name: "Custom Vanilla Mobs included (In mineshafts)",
+    description: "Modified versions of standard Minecraft mobs can be found within mineshafts.",
+    image: "./src/pages/features/images/Spawner_with_fire.png",
+  },
+  {
+    name: "Exported for the latest version of Minecraft",
+    description: "The map is compatible with the latest Minecraft Edition.",
+    image: "./src/pages/features/images/minecraft-icon.png",
+  },
+  
+  {
+    name: "Geodes",
+    description: "Geodes, containing valuable crystals, can be found within the world.",
+    image: "./src/pages/features/images/Geode.png",
+  },
+];
+
+const structures: Feature[] = [
+{
+      "name": "Vanilla and custom advanced structures",
+      "description": "The map contains both standard Minecraft structures and unique, advanced custom-built structures.",
+      "image": null
+    },
+    {
+      "name": "Plains Village",
+      "description": "Villages with the plains biome style are included.",
+      "image": null
+    },
+    {
+      "name": "Taiga Village",
+      "description": "Villages with the taiga biome style are included.",
+      "image": null
+    },
+    {
+      "name": "Desert Village",
+      "description": "Villages with the desert biome style are included.",
+      "image": null
+    },
+    {
+      "name": "Savanna Village",
+      "description": "Villages with the savanna biome style are included.",
+      "image": null
+    },
+    {
+      "name": "Vanilla Strongholds",
+      "description": "Standard Minecraft strongholds can be found within the world.",
+      "image": null
+    },
+    {
+      "name": "Custom Dungeons",
+      "description": "Unique, custom-designed dungeons are present for exploration and challenges.",
+      "image": null
+    },
+    {
+      "name": "Strongholds scattered across the land (indicated by Moss and stone statues)",
+      "description": "Strongholds are distributed throughout the world and can be located by mossy blocks and stone statues.",
+      "image": null
+    },
+    {
+      "name": "Vaultmine - Every Plant Available (Custom Mineshaft with Seedvault - Read More here)",
+      "description": "A special custom mineshaft called 'Vaultmine' contains all available plants and a 'Seedvault'. More details are available on the project page.",
+      "image": null
+    },
+    {
+      "name": "Custom Witchhuts",
+      "description": "Unique, custom-designed witch huts can be found.",
+      "image": null
+    },
+    {
+      "name": "Vanilla Ancient City",
+      "description": "Standard Minecraft ancient cities are present in the Deep Dark biomes.",
+      "image": null
+    },
+    {
+      "name": "Mobvote Mob Statues and Golems",
+      "description": "Statues and golems representing past Minecraft mob vote winners are included.",
+      "image": null
+    },
+    {
+      "name": "Vanilla and custom mineshafts",
+      "description": "The world contains both standard Minecraft mineshafts and unique, custom-designed ones.",
+      "image": null
+    },
+    {
+      "name": "Custom Nether Portals",
+      "description": "Unique, custom-designed Nether portals can be found.",
+      "image": null
+    },
+    {
+      "name": "Custom Mobs Spawner Structures for: ",
+      "description": "Bees, chickens, cows, donkeys, foxes, goats, horses, ice bears, llamas, ocelots, pandas, pigs, sheeps, turtles, and wolfs",
+      "image": null
+    },
+    {
+      "name": "Bedrock: Loot chests accessing the Vanilla Loot-Tables",
+      "description": "In the Bedrock Edition, loot chests draw from the standard Minecraft loot tables for randomized items (currently a software limitation may affect this).",
+      "image": null
+    },
+    {
+      "name": "for random loot (currently software limitation)",
+      "description": "Loot obtained from chests will be randomized, although this may be affected by software limitations in the Bedrock Edition.",
+      "image": null
+    },
+    {
+      "name": "Custom Mansions",
+      "description": "Unique, custom-designed woodland mansions can be found.",
+      "image": null
+    },
+    {
+      "name": "Abandoned Villages / Structures",
+      "description": "Villages and other structures that appear to be abandoned are present.",
+      "image": null
+    },
+    {
+      "name": "Custom Ocean Monument",
+      "description": "A unique, custom-designed ocean monument can be explored.",
+      "image": null
+    }
+];
+
+const biomes: Feature[] = [
+{
+      "name": "Custom Arctic Area",
+      "description": "A uniquely designed arctic biome is included.",
+      "image": null
+    },
+    {
+      "name": "Custom Badlands / Mesa",
+      "description": "A uniquely designed badlands or mesa biome is included.",
+      "image": null
+    },
+    {
+      "name": "Custom Deserts",
+      "description": "Uniquely designed desert biomes are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Red Deserts",
+      "description": "Uniquely designed red sand desert biomes are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Flower Forest",
+      "description": "A uniquely designed flower forest biome is included.",
+      "image": null
+    },
+    {
+      "name": "Custom Forests: Birch, Oak, Mega Oak, Dark Oak, Spruce",
+      "description": "Uniquely designed versions of various forest types are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Forests:  Mega Spruce, Taiga, Jungle",
+      "description": "Uniquely designed versions of various forest types are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Mushroom Fields",
+      "description": "A uniquely designed mushroom fields biome is included.",
+      "image": null
+    },
+    {
+      "name": "Custom Plains",
+      "description": "A uniquely designed plains biome is included.",
+      "image": null
+    },
+    {
+      "name": "Custom Rivers",
+      "description": "Uniquely designed river biomes are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Savanna",
+      "description": "A uniquely designed savanna biome is included.",
+      "image": null
+    },
+    {
+      "name": "Lush Caves",
+      "description": "Standard Minecraft lush cave biomes are present.",
+      "image": null
+    },
+    {
+      "name": "Dripstone Caves",
+      "description": "Standard Minecraft dripstone cave biomes are present.",
+      "image": null
+    },
+    {
+      "name": "Crystal Caves",
+      "description": "Unique cave systems filled with crystals are included.",
+      "image": null
+    },
+    {
+      "name": "Deep Dark Caves",
+      "description": "Standard Minecraft deep dark cave biomes are present.",
+      "image": null
+    },
+    {
+      "name": "Mega Caves",
+      "description": "Large, expansive cave systems are included.",
+      "image": null
+    },
+    {
+      "name": "Complex Caves",
+      "description": "Intricate and interconnected cave systems are included.",
+      "image": null
+    },
+    {
+      "name": "Custom Oceans",
+      "description": "Uniquely designed ocean biomes are included.",
+      "image": null
+    },
+   
+];
+
+import { cn } from "@/lib/utils" // Assuming you have a utility for class name merging
+// Define the type for your biome data
+interface BiomeData {
+    biome: string;
+    inMinecraft: boolean;
+    inMcmeddonsWorlds: boolean;
+}
+
+// Simulate fetching data from a JSON file (replace with actual import if needed)
+const biomeData: BiomeData[] = [
+    { biome: "Generally Plains", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Forest: Oak, Birch, Dark", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Mountains", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Desert", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Taiga", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Swamps", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Jungle", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Savanna", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Generally Badlands", inMinecraft: true, inMcmeddonsWorlds: true },
+    
+    
+    { biome: "",  },
+    { biome: "Snowy Plains", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Ice Spikes", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Snowy Taiga", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Frozen River", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Frozen Ocean", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Deep Frozen Ocean", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Snowy Slopes", inMinecraft: true, inMcmeddonsWorlds: true },
+    
+    { biome: "", inMinecraft: 0, inMcmeddonsWorlds: 0 },
+    { biome: "Jagged Peaks", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Forzen Peaks", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Snowy Slopes", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Taiga", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Old Growth Pine Taiga", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Old Growth Spruce Taiga", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Grove", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Cold Beach", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Cold Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Deep Cold Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Windswept Plains", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Windswept Gravelly Hills", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Windswept Forest", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Stony Shore", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "", inMinecraft: 0, inMcmeddonsWorlds: 0 },
+    { biome: "Plains", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Sunflower Plains", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Forest", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Flower Forest", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Birch Forest", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Old Growth Birch Forest", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Dark Forest", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Swamp", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Mangrove Swamp", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "River", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Beach", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Meadow", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Cherry Grove", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Lush Caves", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Dripstone Caves", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "", inMinecraft: 0, inMcmeddonsWorlds: 0 },
+    { biome: "Desert", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Savanna", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Savanna Plateau", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Windswept Savanna", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Badlands", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Eroded Badlands", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Wooded Badlands Plateau", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Bamboo Jungle", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Jungle", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Sparse Jungle", inMinecraft: true, inMcmeddonsWorlds: true },
+    { biome: "Warm Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Lukewarm Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Deep Lukewarm Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+    { biome: "Deep Ocean", inMinecraft: true, inMcmeddonsWorlds: false },
+
+    // Add more biomes as needed
+
+    
+];
+const discordlink = "https://discord.gg/RRpPB3Apt5";
+---
+
+
+<Main title={title} subTitle={subTitle} bannerImage={bannerImage}>
+  <div class="article-wrapper">
+    <div class="text-center mb-10 md:mb-16 max-w-3xl mx-auto">
+        <h1 class="text-4xl sm:text-4xl md:text-4xl font-bold leading-tight mb-4 text-[var(--text-color)]">
+            Every feature you can experience <br>in the worlds of McMeddon
+        </h1>
+        <div class="mt-6 md:mt-8">
+          <!-- <a href="#" class="btn btn-pricing-secondary text-[var(--text-color)]"> Contact via PMC! </a> -->
+          
+          <a href={discordlink} class="btn btn-pricing-secondary  mt-auto text-[var(--text-color)] flex align-middle">
+                <Icon name="line-md:discord" size={24} class="float-start text-[var(--primary-color)] mr-4" />
+                Get in touch with me on Discord!
+            </a>
+        </div>
+    </div>
+  </div>
+
+    <main class="max-w-screen-xl mx-auto px-4 py-12">
+      <h2 class="text-2xl text-center font-bold text-[var(--text-color)] mb-8">World Features</h2>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 ">
+        {features.map((feature) => (
+          <div class="bg-[--card-color-transparent] p-4 rounded-2xl shadow transition hover:shadow-lg hover:scale-[1.01] duration-200 rounded-2xl">
+            {feature.image && (
+              <img
+                src={feature.image}
+                alt={feature.name}
+                class="w-full h-48 object-contain rounded-2xl mb-4"
+                loading="lazy"
+              />
+            )}
+            <h2 class="text-xl font-semibold text-[var(--primary-color)]">{feature.name}</h2>
+            <p class="text-[var(--text-color)]">{feature.description}</p>
+          </div>
+        ))}
+      </div>
+      <br>
+<hr>
+      <br>
+
+    
+<!-- ############### -->
+
+      <h2 class="text-2xl text-center font-bold text-[var(--text-color)] mt-8 mb-8">Structure Features</h2>
+
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {structures.map((structure) => (
+          <div class="bg-[--card-color-transparent] p-4 rounded-2xl shadow transition hover:shadow-lg hover:scale-[1.01] duration-200">
+            {structure.image && (
+              <img
+                src={structure.image}
+                alt={structure.name}
+                class="w-full h-48 object-cover rounded-2xl mb-4"
+                loading="lazy"
+              />
+            )}
+            <h2 class="text-xl font-semibold text-[var(--primary-color)]">{structure.name}</h2>
+            <p class="text-[var(--text-color)]">{structure.description}</p>
+          </div>
+        ))}
+      </div>
+      <br>
+      <hr>
+
+      <h2 class="text-2xl text-center font-bold text-[var(--text-color)] mt-8 mb-8">Biomes Features</h2>
+
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {biomes.map((biome) => (
+          <div class="bg-[--card-color-transparent] p-4 rounded-2xl shadow transition hover:shadow-lg hover:scale-[1.01] duration-200">
+            {biome.image && (
+              <img
+                src={biome.image}
+                alt={biome.name}
+                class="w-full h-48 object-cover rounded-2xl mb-4"
+                loading="lazy"
+              />
+            )}
+            <h2 class="text-xl font-semibold text-[var(--primary-color)]">{biome.name}</h2>
+            <p class="text-[var(--text-color)]">{biome.description}</p>
+          </div>
+        ))}
+      </div>
+      <br>
+      <hr>
+    </main>
+  </div>
+
+  
+
+
+    <div class="container mx-auto ">
+        <h1 class="text-3xl font-semibold text-center text-[var(--text-color)] mb-8">Minecraft Biomes</h1>
+        <div class="overflow-x-auto rounded-2xl">
+            <table class="min-w-full border-collapse border border-gray-300 shadow-lg bg-white rounded-lg rounded-2xl">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Biome</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Can be placed</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">has been customized</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 rounded-2xl " >
+                    {biomeData.map((biome) => (
+                        <tr key={biome.biome}>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{biome.biome}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                {biome.inMinecraft ? (
+                                    <span class="checkmark text-green-500"></span>
+                                ) : (
+                                    <span class="text-red-500"></span>
+                                )}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                {biome.inMcmeddonsWorlds ? (
+                                     <span class="checkmark text-green-500"></span>
+                                ) : (
+                                    <span class="xmark text-red-500"></span>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    .checkmark::before {
+        content: '✓'; /* Unicode checkmark character */
+    }
+    .checkmark {
+        font-size: 1.2em;
+        line-height: 0;
+    }
+    .xmark::before {
+        content: 'x'; /* Unicode checkmark character */
+    }
+    .xmark {
+        font-size: 1.2em;
+        line-height: 0;
+    }
+</style>
+</Main>
+
+<style>
+  .article-wrapper {
+    @apply w-full rounded-2xl bg-[var(--card-color)] p-10;
+  }
+  .article {
+    @apply flex flex-col;
+  }
+</style>

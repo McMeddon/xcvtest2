@@ -1,0 +1,198 @@
+---
+import YukinaConfig from "../../yukina.config";
+import { GetCoverURLForUnspecifiedEntry } from "../utils/cover";
+
+export interface Props {
+  title?: string;
+  subTitle?: string;
+  bannerImage?: string;
+  slug?: string;
+}
+const { title, subTitle, bannerImage, slug } = Astro.props;
+
+const hasTitle = title !== undefined || subTitle !== undefined;
+const hasHeaderImg = bannerImage !== undefined || slug !== undefined;
+
+let carouselImgsList = YukinaConfig.banners;
+const carouselAnimationTime = `${carouselImgsList.length * 6}s`;
+---
+
+<div id="banner" class="banner onload-animation-fade-in -mt-25 lg:m-12" style="margin-bottom: -15vh ">
+  <div class="transition-main banner-inner h-full w-full">
+    {
+      !hasHeaderImg && (
+        <section class=" relative min-h-dvh lg:min-h-screen flex flex-col items-center bg-gray-900 text-white rounded-2xl lg:mb-4">
+          <div class="absolute inset-0 z-0 rounded-2xl">
+            <video autoplay loop muted class="w-full h-full object-cover opacity-50 rounded-2xl">
+              <source src="/herovid.mp4" type="video/mp4" class="rounded-2xl" />
+
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div class="absolute inset-0 bg-black opacity-5 z-0"></div>
+          <div class="z-50 relative z-10 flex-grow flex flex-col lg:justify-center p-40 items-start text-left px-6 sm:px-10 lg:px-10 w-full max-w-screen-xl">
+            <h2 class="text-2xl sm:text-3xl lg:text-6xl font-bold leading-tight italic mb-4">
+              Experience the most beautiful <br>Landscapes for Minecraft
+            </h2>
+            <p class="text-sm sm:text-xl mb-8 max-w-prose">
+              Explore the world of Minecraft like never before with our stunning landscapes. From serene forests to majestic mountains. For survival or creative!
+            </p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 ">
+              <a href="https://patreon.com/c/mcmeddon" target="_blank" class="bg-white text-gray-800 hover:bg-gray-200 font-semibold py-3 px-8 rounded-full text-center transition-colors duration-300">
+                Become a Patreon
+              </a>
+              <a href="/commissions" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-800 font-semibold py-3 px-8 rounded-full text-center transition-colors duration-300">
+                Request a Commission
+              </a>
+            </div>
+          </div>
+        </section>
+      )
+    }
+    {
+      hasHeaderImg && (
+        <div class="cover -z-10 rounded-2xl">
+          <img
+            class="item lozad rounded-2xl"
+            data-src={bannerImage ?? GetCoverURLForUnspecifiedEntry(slug ?? "")}
+            alt="PostCoverr"
+          />
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  const styleElement = document.createElement("style");
+  const carouselImgs = document.getElementById("carousel_imgs");
+  const carouselImgsCount = carouselImgs?.children.length ?? 0;
+
+  const carouselAnimation = `
+  @keyframes carousel-animation {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1.01);
+    }
+  `;
+
+  /* const carouselAnimation = `
+  @keyframes carousel-animation {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    3% {
+      opacity: 1;
+    }
+    8% {
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    ${100 / carouselImgsCount}% {
+      opacity: 1;
+    }
+    ${100 / carouselImgsCount + 50 / carouselImgsCount}% {
+      opacity: 1;
+      animation-timing-function: ease-out;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.3);
+    }
+  }
+  `; */
+  styleElement.textContent = carouselAnimation;
+  let bannerElement = document.getElementById("banner");
+  if (bannerElement && !bannerElement.querySelector("style"))
+    bannerElement.appendChild(styleElement);
+</script>
+
+<style define:vars={{ carouselAnimationTime }}>
+  .banner {
+    @apply relative h-[calc(var(--banner-height)*3/4)] opacity-100 lg:h-[var(--banner-height)];
+  }
+
+  .carousel {
+    @apply absolute left-0 top-0 -z-10 block h-[calc(var(--banner-height)*3/4)] w-full overflow-hidden bg-white lg:h-[var(--banner-height)];
+    animation-fill-mode: forwards;
+  }
+
+  .carousel::before {
+    /* @apply absolute left-0 top-0 z-10 block h-full w-full bg-black/25 transition-all content-['']; */
+    /* @apply dark:bg-black/30; */
+  }
+
+  .carousel .item {
+    @apply absolute left-0 top-0 z-0 h-full w-full origin-center bg-cover bg-center bg-no-repeat opacity-0;
+    animation: carousel-animation var(--carouselAnimationTime) linear infinite
+      0s;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  .cover {
+    @apply absolute left-0 top-0 z-0 block h-[var(--banner-height)] w-full overflow-hidden bg-white;
+  }
+
+  .cover::before {
+    /* @apply absolute left-0 top-0 z-10 block h-full w-full bg-black/25 transition-all content-['']; */
+    /* @apply dark:bg-black/30; */
+  }
+
+  .cover .item {
+    @apply h-full w-full object-cover;
+  }
+
+  .title {
+    @apply mt-8 text-center font-bold text-[var(--title-color)] drop-shadow-lg lg:mt-1;
+    font-family: var(--title-font);
+  }
+
+  .title-index {
+    @apply mb-0 text-6xl leading-[5rem] lg:mb-1 lg:text-8xl;
+  }
+
+  .title-normal {
+    @apply mb-1 text-3xl lg:text-5xl;
+  }
+
+  .subtitle {
+    @apply text-center text-xl text-[var(--subtitle-color)] drop-shadow-md lg:text-3xl;
+    font-family: var(--subtitle-font);
+  }
+
+  .waves {
+    @apply absolute -bottom-[1px] h-[10vh] max-h-[9.375rem] min-h-[3.125rem] w-full;
+    @apply md:h-[15vh];
+  }
+
+  .waves > .parallax use {
+    @apply fill-[var(--background-color)];
+    animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
+  }
+
+  @keyframes wave {
+    0% {
+      transform: translate3d(-90px, 0, 0);
+    }
+    100% {
+      transform: translate3d(85px, 0, 0);
+    }
+  }
+
+  @keyframes banner-onload-animation {
+    0% {
+      opacity: 0;
+      height: calc(var(--banner-height) + 4rem);
+    }
+    100% {
+      opacity: 1;
+      height: var(--banner-height);
+    }
+  }
+</style>

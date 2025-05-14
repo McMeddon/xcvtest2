@@ -1,0 +1,72 @@
+---
+import { getEntry, render } from "astro:content";
+import Main from "../layouts/MainLayout.astro";
+import Markdown from "../components/Markdown.astro";
+import CopyRight from "../components/misc/CopyRight.astro";
+
+const aboutPost = await getEntry("specs", "about");
+const { Content } = await render(aboutPost!);
+interface Props {
+  title?: string;
+  subTitle?: string;
+  bannerImage?: string;
+  published?: Date;
+}
+const { title = "404 - Page Not Found", subTitle = "Oops! Looks like you're lost." } = Astro.props;
+---
+
+<Main title={title} subTitle={subTitle} >
+  <div class="article-wrapper">
+    <div class="article">
+      <div class="error-content">
+        <img src="../hamster.png" alt="Hamster" class="error-image justify-center" style="max-height:5rem; margin:auto;"  />
+        <h1 class="error-title">404</h1>
+        <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
+        <div class="action-buttons">
+          <a href="/" class="home-button">
+            <i class="fas fa-home"></i>
+            Return Home
+          </a>
+          <button onclick="window.history.back()" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</Main>
+
+<style>
+  .article-wrapper {
+    @apply w-full rounded-2xl bg-[var(--card-color)] p-10;
+  }
+  .article {
+    @apply flex flex-col items-center justify-center min-h-[400px];
+  }
+  .error-content {
+    @apply text-center;
+  }
+  .error-title {
+    @apply text-8xl font-bold text-[var(--primary-color)] mb-4;
+    animation: pulse 2s infinite;
+  }
+  .error-message {
+    @apply text-xl text-[var(--text-color)] mb-8;
+  }
+  .action-buttons {
+    @apply flex gap-4 justify-center;
+  }
+  .home-button, .back-button {
+    @apply px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2;
+    @apply bg-[var(--primary-color)] text-white hover:opacity-90;
+  }
+  .back-button {
+    @apply bg-[var(--card-color)] border border-[var(--primary-color)] text-[var(--primary-color)];
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+</style>

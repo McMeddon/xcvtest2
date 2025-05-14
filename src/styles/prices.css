@@ -1,0 +1,76 @@
+/* Button base styles */
+.btn {
+  padding: 0.75rem 1.5rem; /* Corresponds to py-3 px-6 */
+  border-radius: 0.5rem; /* Corresponds to rounded-lg */
+  font-weight: 600; /* Corresponds to font-semibold */
+  text-align: center;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid transparent; /* Base border for consistency */
+}
+.btn:active {
+  transform: translateY(1px); /* Slight press effect */
+}
+
+/* Schedule a call button */
+.btn-schedule {
+  background-color: var(--card-color-lighten);
+  color: var(--text-color);
+  padding: 0.75rem 2rem; /* Corresponds to py-3 px-8 */
+  font-size: 1.125rem; /* Corresponds to text-lg */
+}
+.btn-schedule:hover {
+  background-color: var(--primary-color-hover);
+  color: var(--text-on-primary); /* Assuming primary-color-hover is dark enough */
+}
+
+/* Pricing Card Buttons */
+.btn-pricing-primary {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+  border-color: var(--primary-color);
+}
+.btn-pricing-primary:hover {
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
+}
+
+.btn-pricing-secondary {
+  background-color: var(--card-color-lighten);
+  color: var(--text-color);
+  border-color: var(--card-color-lighten);
+}
+.btn-pricing-secondary:hover {
+  background-color: var(--primary-color-hover); /* Or a darker shade of card-color-lighten */
+  /* color: var(--text-on-primary); */
+  border-color: var(--primary-color-hover);
+}
+
+.btn-pricing-tertiary {
+  background-color: var(--text-color); /* Light background in dark mode */
+  color: var(--text-on-tertiary);      /* Dark text */
+  border-color: var(--text-color);
+}
+.btn-pricing-tertiary:hover {
+  background-color: oklch(90% 0.002 var(--hue)); /* Slightly dimmer light background */
+  border-color: oklch(90% 0.002 var(--hue));
+}
+
+/* Highlighted card style */
+.price-card {
+  border-width: .5px !important; /* Ensure it overrides Tailwind if present */
+  border-style:dotted ;
+  border-color: var(--text-color-lighten) !important;
+}
+/* Highlighted card style */
+.highlighted-card {
+  border-width: 2px !important; /* Ensure it overrides Tailwind if present */
+  border-style: solid !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Ensure Font Awesome icons use the primary color */
+.fa-check-circle {
+  color: var(--primary-color);
+}

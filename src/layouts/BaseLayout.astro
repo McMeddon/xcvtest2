@@ -1,0 +1,45 @@
+---
+import YukinaConfig from "../../yukina.config";
+import BaseHead from "../components/BaseHead.astro";
+---
+
+<html lang={YukinaConfig.locale}>
+  <BaseHead />
+  <body class="overflow-y-hidden">
+    <slot />
+  </body>
+  <!-- Google tag (gtag.js) -->
+		<script 
+		async 
+		src="https://www.googletagmanager.com/gtag/js?id=G-3145204CFM"
+		type="text/plain"
+    	data-cookiecategory="analytics"
+		>
+		console.log('"analyticstag" category accepted');
+		</script>
+		
+		<script defer
+		type="text/plain"
+    	data-cookiecategory="analytics"
+		>
+
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-3145204CFM');		
+			console.log('"analytics" category accepted');
+		</script>
+
+		<!-- Load cookie consent -->
+		<script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.9.1/dist/cookieconsent.js"></script>
+		<script defer src=".././js/cookieconsent-init.js"></script>
+</html>
+
+<style>
+  body {
+    @apply bg-[var(--background-color)];
+  }
+</style>
+
+
+	
